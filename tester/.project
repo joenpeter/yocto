@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>yocto-core</name>
+	<name>yocto-tester</name>
 	<comment></comment>
 	<projects>
+		<project>pico-core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

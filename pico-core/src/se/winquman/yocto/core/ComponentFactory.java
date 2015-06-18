@@ -1,7 +1,7 @@
 /**
  * 
  */
-package se.winquman.pico.core;
+package se.winquman.yocto.core;
 
 /**
  * @author Joen

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package se.winquman.pico.core;
+package se.winquman.yocto.core;
 
 /**
  * Maintains the configuration of the active environment
