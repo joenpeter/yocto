@@ -29,7 +29,9 @@ public abstract class Bootstrap {
 		
 		// XXX init and stuff
 		this.run = run;
-
+		logSettings = getLogSettings();
+		config = getConfigurator();
+		populateConfigurator();
 		//end
 		
 		// XXX load config
