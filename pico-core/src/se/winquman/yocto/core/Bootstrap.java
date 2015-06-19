@@ -29,29 +29,30 @@ public abstract class Bootstrap {
 		
 		// XXX init and stuff
 		this.run = run;
+		context = getContext();
 		logSettings = getLogSettings();
 		config = getConfigurator();
-		populateConfigurator();
 		//end
 		
 		// XXX load config
-		
+		populateConfigurator();
 		//end
 		
 		preInitializationHook();
 		
 		// XXX load instances
-		
+		populateContextInstances();
 		//end
 		
 		// XXX load components
-		
+		populateContextComponents();
 		//end
 		
 		preRunnersHook();
 		
 		// XXX load runners
-		
+		populateContextRunners();
+		startContextRunners();
 		//end
 		
 		// XXX last and cleanup, etc
