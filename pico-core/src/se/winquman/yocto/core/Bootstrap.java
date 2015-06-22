@@ -21,7 +21,7 @@ public abstract class Bootstrap {
 	
 	public final void boot(RunConfiguration run) {
 
-		// XXX pre-pre-init?
+		// pre-pre-init
 		
 		//end
 		
@@ -30,38 +30,79 @@ public abstract class Bootstrap {
 		// XXX init and stuff
 		this.run = run;
 		context = getContext();
-		logSettings = getLogSettings();
 		config = getConfigurator();
+		logSettings = getLogSettings();
+		logSettings.startLogging();
 		//end
 		
-		// XXX load config
+		// load config
 		populateConfigurator();
 		//end
 		
 		preInitializationHook();
 		
-		// XXX load instances
+		// load instances
 		populateContextInstances();
 		//end
 		
-		// XXX load components
+		// load components
 		populateContextComponents();
 		//end
 		
 		preRunnersHook();
 		
-		// XXX load runners
+		// load runners
 		populateContextRunners();
 		startContextRunners();
 		//end
 		
-		// XXX last and cleanup, etc
+		// last and cleanup, etc
 		
 		//end
 		
 		postBootHook();
 	}
 	
+	private void startContextRunners() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void populateContextRunners() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void populateContextComponents() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void populateContextInstances() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void populateConfigurator() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected LogSettings getLogSettings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Configurator getConfigurator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Context getContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	protected void preBootHook() {
 		// Can be extended to hook on
 	}
