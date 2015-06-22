@@ -32,10 +32,12 @@ public abstract class Bootstrap {
 		context = getContext();
 		logSettings = getLogSettings();
 		config = getConfigurator();
+		logSettings.startLogging();
 		//end
 		
 		// XXX load config
 		populateConfigurator();
+		
 		//end
 		
 		preInitializationHook();
@@ -62,6 +64,21 @@ public abstract class Bootstrap {
 		postBootHook();
 	}
 	
+	private Configurator getConfigurator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private LogSettings getLogSettings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Context getContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	protected void preBootHook() {
 		// Can be extended to hook on
 	}
