@@ -13,16 +13,33 @@ import java.util.logging.Logger;
  */
 public interface LogSettings {
 	
+	/**
+	 * Start the logging for this session.
+	 */
 	public void startLogging();
 	
+	/**
+	 * Get the logger
+	 * @return the Logger configured for logging
+	 */
 	public Logger getConfiguredLogger();
 	
+	/**
+	 * Set the lowest log level to log to
+	 * @param level the lowest log level to log
+	 */
 	public void setLowestLogLevel(Level level);
 	
+	/**
+	 * Get the default formatter
+	 * @return the Formatter
+	 */
 	public Formatter getDefaultFormatter();
 	
+	/**
+	 * Return the path to the log file
+	 * @return
+	 */
 	public String getLogFilePath();
-	
-	public void setLogFilePath(String path);
 
 }

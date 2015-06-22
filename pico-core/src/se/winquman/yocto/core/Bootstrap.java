@@ -27,17 +27,17 @@ public abstract class Bootstrap {
 		
 		preBootHook();
 		
-		// XXX init and stuff
+		// init and stuff
 		this.run = run;
 		context = getContext();
 		config = getConfigurator();
 		logSettings = getLogSettings();
 		logSettings.startLogging();
-		//end
+		// end
 		
 		// load config
 		populateConfigurator();
-		//end
+		// end
 		
 		preInitializationHook();
 		
