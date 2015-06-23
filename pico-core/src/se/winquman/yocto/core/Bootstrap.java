@@ -5,6 +5,7 @@ package se.winquman.yocto.core;
 
 import java.util.logging.Logger;
 
+import se.winquman.yocto.core.logging.BasicLogSettings;
 import se.winquman.yocto.core.logging.LogSettings;
 
 
@@ -89,8 +90,7 @@ public abstract class Bootstrap {
 	}
 
 	protected LogSettings getLogSettings() {
-		// TODO Auto-generated method stub
-		return null;
+		return new BasicLogSettings();
 	}
 
 	protected Configurator getConfigurator() {
