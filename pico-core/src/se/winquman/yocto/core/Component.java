@@ -7,9 +7,9 @@ package se.winquman.yocto.core;
  * @author Joen
  *
  */
-public interface Component {
+public interface Component extends YoctoObject {
 	
-	public void create(Context context);
+	public Component replicate();
 	
 	public void destroy();
 

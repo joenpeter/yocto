@@ -3,6 +3,8 @@
  */
 package se.winquman.yocto.core;
 
+import se.winquman.yocto.core.logging.LogSettings;
+
 /**
  * This is the context currently in operation
  * 
@@ -22,5 +24,8 @@ public interface Context {
 	public ComponentFactory getComponentFactory(Class<Component> type);
 	
 	public Component newComponent(String name);
-
+	
+	public LogSettings getLogSettings();
+	
+	
 }

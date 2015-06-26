@@ -9,4 +9,8 @@ package se.winquman.yocto.error;
  */
 public class ApplicationRuntimeException extends RuntimeException {
 
+	public ApplicationRuntimeException(String string) {
+		super(string);
+	}
+
 }

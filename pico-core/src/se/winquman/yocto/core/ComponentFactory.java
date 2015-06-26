@@ -10,4 +10,6 @@ package se.winquman.yocto.core;
 public interface ComponentFactory extends Instance {
 
 	public Component newComponent();
+	
+	public Component newComponent(String type);
 }

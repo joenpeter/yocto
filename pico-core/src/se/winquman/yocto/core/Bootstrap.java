@@ -5,6 +5,7 @@ package se.winquman.yocto.core;
 
 import java.util.logging.Logger;
 
+import se.winquman.yocto.core.helper.InternalSettings;
 import se.winquman.yocto.core.logging.BasicLogSettings;
 import se.winquman.yocto.core.logging.LogSettings;
 
@@ -19,6 +20,7 @@ public abstract class Bootstrap {
 	private Context context;
 	private Configurator config;
 	private LogSettings logSettings;
+	private Logger logger;
 	
 	public final void boot(RunConfiguration run) {
 
@@ -34,10 +36,9 @@ public abstract class Bootstrap {
 		config = getConfigurator();
 		logSettings = getLogSettings();
 		logSettings.startLogging();
-		// end
-		
-		// load config
-		populateConfigurator();
+		logger = logSettings.getConfiguredLogger();
+		logger.info("" + run.getName() + " " + run.getVersion());
+
 		// end
 		
 		preInitializationHook();
@@ -50,12 +51,17 @@ public abstract class Bootstrap {
 		populateContextComponents();
 		//end
 		
+		// load config
+		populateConfigurator();
+		//end
+		
 		preRunnersHook();
 		
 		// load runners
 		populateContextRunners();
 		startContextRunners();
 		//end
+		
 		
 		// last and cleanup, etc
 		
@@ -94,14 +100,18 @@ public abstract class Bootstrap {
 	}
 
 	protected Configurator getConfigurator() {
-		// TODO Auto-generated method stub
-		return null;
+		return InternalSettings.getEmptyConfigurator();
 	}
 
 	protected Context getContext() {
-		// TODO Auto-generated method stub
-		return null;
+		return InternalSettings.getEmptyContext();
 	}
+	
+	
+	
+	/*
+	 * BELOW IS ONLY HOOKS
+	 */
 
 	protected void preBootHook() {
 		// Can be extended to hook on

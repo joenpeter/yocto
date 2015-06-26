@@ -17,5 +17,9 @@ public interface RunConfiguration {
 	public Map<String,ComponentFactory> getComponentFactories();
 	
 	public Map<String,Runner> getRunners();
+	
+	public String getName();
+	
+	public Version getVersion();
 
 }
