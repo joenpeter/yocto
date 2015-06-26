@@ -5,7 +5,7 @@ package se.winquman.yocto.core;
 
 import java.util.logging.Logger;
 
-import se.winquman.yocto.core.helper.InternalSettings;
+import se.winquman.yocto.core.helpers.InternalSettings;
 import se.winquman.yocto.core.logging.BasicLogSettings;
 import se.winquman.yocto.core.logging.LogSettings;
 

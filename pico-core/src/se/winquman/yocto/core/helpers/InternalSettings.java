@@ -1,7 +1,7 @@
 /**
  * 
  */
-package se.winquman.yocto.core.helper;
+package se.winquman.yocto.core.helpers;
 
 import se.winquman.yocto.core.Configurator;
 import se.winquman.yocto.core.Context;
