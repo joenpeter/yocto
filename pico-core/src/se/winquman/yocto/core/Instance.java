@@ -9,10 +9,7 @@ import se.winquman.yocto.error.InitializationException;
  * @author Joen
  *
  */
-public interface Instance {
+public interface Instance extends YoctoObject {
 	
-	public void init() throws InitializationException;
-	
-	public void empty();
 
 }

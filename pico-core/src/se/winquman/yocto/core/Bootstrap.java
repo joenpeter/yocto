@@ -3,11 +3,19 @@
  */
 package se.winquman.yocto.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import se.winquman.yocto.core.engine.RunnerState;
+import se.winquman.yocto.core.engine.RuntimeReference;
+import se.winquman.yocto.core.engine.config.ConfigurationFetcher;
 import se.winquman.yocto.core.helpers.InternalSettings;
+import se.winquman.yocto.core.helpers.RunnerHelper;
 import se.winquman.yocto.core.logging.BasicLogSettings;
 import se.winquman.yocto.core.logging.LogSettings;
+import se.winquman.yocto.error.ApplicationException;
+import se.winquman.yocto.error.ApplicationRuntimeException;
 
 
 /**
@@ -17,12 +25,14 @@ import se.winquman.yocto.core.logging.LogSettings;
 public abstract class Bootstrap {
 	
 	private RunConfiguration run;
+	private RunConfiguration internalRun;
 	private Context context;
 	private Configurator config;
 	private LogSettings logSettings;
 	private Logger logger;
+	private RuntimeReference runRef;
 	
-	public final void boot(RunConfiguration run) {
+	public final void boot(RunConfiguration run) throws ApplicationException {
 
 		// pre-pre-init
 		
@@ -32,33 +42,35 @@ public abstract class Bootstrap {
 		
 		// init and stuff
 		this.run = run;
-		context = getContext();
 		config = getConfigurator();
 		logSettings = getLogSettings();
 		logSettings.startLogging();
 		logger = logSettings.getConfiguredLogger();
 		logger.info("" + run.getName() + " " + run.getVersion());
-
+		context = getContext();
+		config.create(context, config);
+		internalRun = getInternalRuntime();
 		// end
 		
 		preInitializationHook();
 		
-		// load instances
-		populateContextInstances();
-		//end
-		
-		// load components
-		populateContextComponents();
+		//load runtime
+		logger.fine("Loading program components");
+		runRef = populateContext();
 		//end
 		
 		// load config
-		populateConfigurator();
+		try {
+			populateConfigurator();
+		} catch (ApplicationException e) {
+			logger.severe("Could not load configuration. " + e.toString());
+			throw new ApplicationException("Could not load configuration", e);
+		}
 		//end
 		
 		preRunnersHook();
 		
-		// load runners
-		populateContextRunners();
+		// start runners
 		startContextRunners();
 		//end
 		
@@ -70,29 +82,32 @@ public abstract class Bootstrap {
 		postBootHook();
 	}
 	
+	private RunConfiguration getInternalRuntime() {
+		return InternalSettings.getInternalRuntime();
+	}
+
+	private RuntimeReference populateContext() {
+		context.addRuntime(internalRun);
+		return context.addRuntime(run);
+	}
+
 	private void startContextRunners() {
-		// TODO Auto-generated method stub
+		Runner[] runners = runRef.getRunners(RunnerState.INIT);
 		
+		for(int i = 0; i < runners.length; i++) {
+			runners[i].setRunArguments(new ArrayList<Object>());
+			try {
+				RunnerHelper.startRunner(runners[i]);
+			} catch (ApplicationException e) {
+				logger.severe(e.toString());
+			}
+		}
 	}
 
-	private void populateContextRunners() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void populateContextComponents() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void populateContextInstances() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void populateConfigurator() {
-		// TODO Auto-generated method stub
-		
+	private void populateConfigurator() throws ApplicationException {
+		ConfigurationFetcher fetcher = (ConfigurationFetcher) context.newComponent("ConfigurationFetcher");
+		Configuration c = fetcher.fetchConfiguration(run.getConfigFilePath());
+		config.loadConfiguration(c);
 	}
 
 	protected LogSettings getLogSettings() {
@@ -104,7 +119,7 @@ public abstract class Bootstrap {
 	}
 
 	protected Context getContext() {
-		return InternalSettings.getEmptyContext();
+		return InternalSettings.getEmptyContext(config, logSettings);
 	}
 	
 	

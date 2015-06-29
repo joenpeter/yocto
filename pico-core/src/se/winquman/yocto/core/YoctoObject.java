@@ -11,6 +11,7 @@ import se.winquman.yocto.error.ApplicationException;
  */
 public interface YoctoObject {
 	
-	public void create(Context cont, Configurator conf) throws ApplicationException;
+	public void create(Context cont, Configurator conf);
 
+	public boolean isCheck();
 }

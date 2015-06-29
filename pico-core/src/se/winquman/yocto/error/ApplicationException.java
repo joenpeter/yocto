@@ -13,4 +13,8 @@ public class ApplicationException extends Exception {
 		super(string);
 	}
 
+	public ApplicationException(String string, Throwable e) {
+		super(string, e);
+	}
+
 }

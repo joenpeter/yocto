@@ -1,7 +1,7 @@
 /**
  * 
  */
-package se.winquman.yocto.tester;
+package se.winquman.yocto.core.engine;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import se.winquman.yocto.core.helpers.RunnerHelper;
  * @author Joen
  *
  */
-public class TesterRunConfiguration extends AbstractRunConfiguration {
+public class InternalRunConfiguration extends AbstractRunConfiguration {
 
 	/* (non-Javadoc)
 	 * @see se.winquman.yocto.RuntimeEnvironment#defaultComponents(java.util.Map)
@@ -28,7 +28,10 @@ public class TesterRunConfiguration extends AbstractRunConfiguration {
 			Map<String, Class> components) {
 
 		// use components.put() to add stuff
-		
+		components.put("ConfigurationFetcher", null);
+		components.put("Configuration", null);
+		components.put("ConfigurationFinder", null);
+		components.put("ConfigurationPath", null);
 		
 		return components;
 	}

@@ -12,14 +12,20 @@ import java.util.Map;
  */
 public interface RunConfiguration {
 	
-	public Map<String,Instance> getInstances();
+	public Map<String,Class> getInstances();
 	
-	public Map<String,ComponentFactory> getComponentFactories();
+	public Map<String,Class> getComponentFactories();
 	
-	public Map<String,Runner> getRunners();
+	public Map<String,Class> getRunners();
 	
 	public String getName();
 	
 	public Version getVersion();
+	
+	public String getConfigFilePath();
+	
+	public Map<String, String> getSettings();
+	
+	public Map<String,Class> getComponents();
 
 }

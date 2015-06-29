@@ -9,10 +9,10 @@ package se.winquman.yocto.core;
  * @author Joen
  * 
  */
-public interface Configurator {
+public interface Configurator extends Instance {
 	
 	public Object getConfiguration(String configPath);
 	
-	
+	public void loadConfiguration(Configuration config);
 
 }

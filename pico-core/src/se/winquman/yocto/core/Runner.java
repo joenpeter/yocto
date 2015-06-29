@@ -3,6 +3,9 @@
  */
 package se.winquman.yocto.core;
 
+import java.util.List;
+
+import se.winquman.yocto.core.engine.RunnerState;
 import se.winquman.yocto.error.InitializationException;
 
 /**
@@ -19,4 +22,10 @@ public interface Runner extends Instance, Runnable {
 	public void running();
 
 	public String getRunnerName();
+	
+	public void setRunArguments(List<Object> arguments);
+	
+	public void setStatus(RunnerState state);
+	
+	public RunnerState getStatus();
 }

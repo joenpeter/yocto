@@ -13,4 +13,8 @@ public class ApplicationRuntimeException extends RuntimeException {
 		super(string);
 	}
 
+	public ApplicationRuntimeException(String string, Throwable e) {
+		super(string,e);
+	}
+
 }

@@ -17,4 +17,8 @@ public class NotCreatedException extends ApplicationRuntimeException {
 		super(string);
 	}
 
+	public NotCreatedException(String string, Throwable e) {
+		super(string, e);
+	}
+
 }

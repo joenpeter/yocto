@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import se.winquman.yocto.core.Runner;
+import se.winquman.yocto.core.engine.RunnerState;
 import se.winquman.yocto.error.ApplicationException;
 
 /**
@@ -30,9 +31,14 @@ public class RunnerHelper {
 			}
 		}
 		
+		if(runner.getStatus() != RunnerState.READY) {
+			throw new ApplicationException("Runner " + runner.getRunnerName() + "is not ready to be started, has status: " + runner.getStatus());
+		}
+		
 		Thread thread = new Thread(runner, runner.getRunnerName());
 		runners.put(runner.getRunnerName(), thread);
 		thread.start();
+		runner.setStatus(RunnerState.STARTED);
 	}
 
 	private static void checkMap() {

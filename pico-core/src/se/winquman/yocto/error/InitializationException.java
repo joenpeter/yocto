@@ -13,4 +13,8 @@ public class InitializationException extends ApplicationException {
 		super(string);
 	}
 
+	public InitializationException(String string, Throwable e) {
+		super(string, e);
+	}
+
 }

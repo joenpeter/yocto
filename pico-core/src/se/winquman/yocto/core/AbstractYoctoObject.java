@@ -15,7 +15,7 @@ import se.winquman.yocto.error.NotCreatedException;
  * @author jpeter
  *
  */
-public class AbstractYoctoObject implements YoctoObject {
+public abstract class AbstractYoctoObject implements YoctoObject {
 
 	protected Context context;
 	protected Configurator config;
@@ -29,7 +29,7 @@ public class AbstractYoctoObject implements YoctoObject {
 	 * @see se.winquman.yocto.core.YoctoObject#create()
 	 */
 	@Override
-	public void create(Context cont, Configurator conf) throws ApplicationException {
+	public void create(Context cont, Configurator conf) {
 		config = conf;
 		context = cont;
 		logSettings = context.getLogSettings();
@@ -42,5 +42,11 @@ public class AbstractYoctoObject implements YoctoObject {
 			throw new NotCreatedException("Object called before it was created: " + this.getClass());
 		}
 	}
+	
+	public boolean isCheck() {
+		return isCreated;
+	}
+	
+	protected abstract void init();
 	
 }
