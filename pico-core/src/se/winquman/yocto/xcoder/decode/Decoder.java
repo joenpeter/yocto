@@ -1,11 +1,12 @@
 /**
  * 
  */
-package se.winquman.yocto.xcoder;
+package se.winquman.yocto.xcoder.decode;
 
 import java.util.List;
 
 import se.winquman.yocto.core.YoctoObject;
+import se.winquman.yocto.xcoder.Encodable;
 
 /**
  * @author Joen
@@ -25,5 +26,5 @@ public interface Decoder<A> extends YoctoObject {
 	
 	public boolean hasNext();
 	
-	public void setReader(EncodeReader<A> reader);
+	public void setReader(DecodeReader<A> reader);
 }

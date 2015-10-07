@@ -1,12 +1,10 @@
 /**
  * 
  */
-package se.winquman.yocto.core;
+package se.winquman.yocto.core.engine.config;
 
 import java.util.List;
 import java.util.Map;
-
-import se.winquman.yocto.core.engine.config.ConfigurationItem;
 
 /**
  * @author Joen

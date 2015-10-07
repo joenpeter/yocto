@@ -1,11 +1,12 @@
 /**
  * 
  */
-package se.winquman.yocto.xcoder;
+package se.winquman.yocto.xcoder.encode;
 
 import java.util.List;
 
 import se.winquman.yocto.core.YoctoObject;
+import se.winquman.yocto.xcoder.Encodable;
 
 /**
  * @author Joen
@@ -19,6 +20,6 @@ public interface Encoder<A> extends YoctoObject {
 	
 	public void encodeAll(List<Encodable> objects);
 	
-	public void setWriter(DecodeWriter<A> writer);
+	public void setWriter(EncodeWriter<A> writer);
 
 }

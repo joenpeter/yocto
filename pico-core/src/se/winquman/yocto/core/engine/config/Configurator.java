@@ -1,7 +1,9 @@
 /**
  * 
  */
-package se.winquman.yocto.core;
+package se.winquman.yocto.core.engine.config;
+
+import se.winquman.yocto.core.Instance;
 
 /**
  * Maintains the configuration of the active environment

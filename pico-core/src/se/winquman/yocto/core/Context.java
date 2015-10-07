@@ -4,6 +4,7 @@
 package se.winquman.yocto.core;
 
 import se.winquman.yocto.core.engine.RuntimeReference;
+import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.core.logging.LogSettings;
 import se.winquman.yocto.error.ApplicationException;
 import se.winquman.yocto.error.ApplicationRuntimeException;

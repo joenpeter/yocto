@@ -6,6 +6,7 @@ package se.winquman.yocto.core;
 import java.util.List;
 
 import se.winquman.yocto.core.engine.RunnerState;
+import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.error.ApplicationException;
 import se.winquman.yocto.error.ApplicationRuntimeException;
 import se.winquman.yocto.error.InitializationException;

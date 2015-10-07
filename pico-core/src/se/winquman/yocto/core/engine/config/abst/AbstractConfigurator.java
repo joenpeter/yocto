@@ -1,13 +1,13 @@
 /**
  * 
  */
-package se.winquman.yocto.core.engine.config;
-
-import java.util.Map;
+package se.winquman.yocto.core.engine.config.abst;
 
 import se.winquman.yocto.core.AbstractInstance;
-import se.winquman.yocto.core.Configuration;
-import se.winquman.yocto.core.Configurator;
+import se.winquman.yocto.core.engine.config.Configuration;
+import se.winquman.yocto.core.engine.config.ConfigurationFinder;
+import se.winquman.yocto.core.engine.config.ConfigurationPath;
+import se.winquman.yocto.core.engine.config.Configurator;
 
 /**
  * @author Joen

@@ -5,6 +5,7 @@ package se.winquman.yocto.core;
 
 import java.util.logging.Logger;
 
+import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.core.logging.LogSettings;
 import se.winquman.yocto.error.ApplicationException;
 import se.winquman.yocto.error.ApplicationRuntimeException;
@@ -35,6 +36,7 @@ public abstract class AbstractYoctoObject implements YoctoObject {
 		logSettings = context.getLogSettings();
 		logger = logSettings.getConfiguredLogger();
 		isCreated = true;
+		init();
 	}
 	
 	protected void check() throws ApplicationRuntimeException {

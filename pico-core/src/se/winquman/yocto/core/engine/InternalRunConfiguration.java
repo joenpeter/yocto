@@ -97,7 +97,8 @@ public class InternalRunConfiguration extends AbstractRunConfiguration {
 	public Version version() {
 		// Change this to correct version.
 		
-		Version version = new Version(0,1,0,0);
+		Version version = new YoctoVersion();
+		version.setVersion(0, 1, 0, 0);
 		
 		return version;
 	}

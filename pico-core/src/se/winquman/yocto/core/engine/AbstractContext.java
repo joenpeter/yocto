@@ -11,12 +11,12 @@ import java.util.logging.Logger;
 
 import se.winquman.yocto.core.Component;
 import se.winquman.yocto.core.ComponentFactory;
-import se.winquman.yocto.core.Configurator;
 import se.winquman.yocto.core.Context;
 import se.winquman.yocto.core.Instance;
 import se.winquman.yocto.core.RunConfiguration;
 import se.winquman.yocto.core.Runner;
 import se.winquman.yocto.core.Session;
+import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.core.helpers.InternalSettings;
 import se.winquman.yocto.core.logging.LogSettings;
 import se.winquman.yocto.error.ApplicationException;

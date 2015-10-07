@@ -4,7 +4,6 @@
 package se.winquman.yocto.core.engine.config;
 
 import se.winquman.yocto.core.Component;
-import se.winquman.yocto.core.Configuration;
 
 /**
  * @author Joen

@@ -3,7 +3,7 @@
  */
 package se.winquman.yocto.core.engine;
 
-import se.winquman.yocto.core.Configurator;
+import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.core.logging.LogSettings;
 
 /**
