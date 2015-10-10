@@ -6,13 +6,10 @@ package se.winquman.yocto.tester;
 import java.util.Map;
 
 import se.winquman.yocto.core.AbstractRunConfiguration;
-import se.winquman.yocto.core.Component;
-import se.winquman.yocto.core.ComponentFactory;
-import se.winquman.yocto.core.Instance;
-import se.winquman.yocto.core.Runner;
 import se.winquman.yocto.core.Version;
-import se.winquman.yocto.core.engine.config.ConfigurationFetcher;
-import se.winquman.yocto.core.helpers.RunnerHelper;
+import se.winquman.yocto.core.impl.YoctoVersion;
+import se.winquman.yocto.tester.impl.MyNameInputerImpl;
+import se.winquman.yocto.tester.impl.MyNameRunnerImpl;
 
 /**
  * @author Joen
@@ -40,23 +37,14 @@ public class TesterRunConfiguration extends AbstractRunConfiguration {
 	public Map<String, Class> instances(
 			Map<String, Class> instances) {
 		
+		instances.put("MyNameInputer", MyNameInputerImpl.class);
+		instances.put("MyNameRunner", MyNameRunnerImpl.class);
 		// Use instances.put() to add stuff
 		
 		
 		return instances;
 	}
 
-	/* (non-Javadoc)
-	 * @see se.winquman.yocto.RuntimeEnvironment#runners(java.util.Map)
-	 */
-	@Override
-	public Map<String, Class> runners(Map<String, Class> runners) {
-		
-		// Use runners.put() to add runners
-		
-		
-		return runners;
-	}
 
 	/* (non-Javadoc)
 	 * @see se.winquman.yocto.RuntimeEnvironment#componentFactories(java.util.Map)
@@ -79,8 +67,8 @@ public class TesterRunConfiguration extends AbstractRunConfiguration {
 		
 		
 		settings.put("programName", "Yocto Container Tester");
-		settings.put("configFilePath", "./config/config.xml");
-		settings.put("configFileType", "XML");
+		settings.put("configFilePath", "C:/work/config.properties");
+		settings.put("configFileType", "Properties");
 		// Use settings.put() to add additional settings
 		
 		
@@ -94,7 +82,8 @@ public class TesterRunConfiguration extends AbstractRunConfiguration {
 	public Version version() {
 		// Change this to correct version.
 		
-		Version version = new Version(0,1,0,0);
+		Version version = new YoctoVersion();
+		version.setVersion(1, 0, 0, 0);
 		
 		return version;
 	}
