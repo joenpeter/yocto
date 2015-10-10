@@ -3,6 +3,8 @@
  */
 package se.winquman.yocto.xcoder.decode;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 
 import se.winquman.yocto.core.YoctoObject;
@@ -14,17 +16,28 @@ import se.winquman.yocto.xcoder.Encodable;
  * Will fetch the object from the reader and then decode.
  * Only decodes from type A objects.
  */
-public interface Decoder<A> extends YoctoObject {
+public interface Decoder<A extends Encodable> extends YoctoObject {
 
 	/**
 	 * first fetches object from reader, then decodes it.
 	 * @return
+	 * @throws IOException 
 	 */
-	public Encodable decodeNext();
+	public A decodeNext() throws IOException;
 	
-	public List<Encodable> decodeAll();
+	/**
+	 * Waits until a new A is available, then returns it
+	 * @return
+	 * @throws IOException 
+	 */
+	public A waitAndDecodeNext() throws IOException;
+	
+	public List<A> decodeAll() throws IOException;
 	
 	public boolean hasNext();
+
+	void setReader(Reader reader);
 	
-	public void setReader(DecodeReader<A> reader);
+	void setResultClass(Class<A> c);
+	
 }

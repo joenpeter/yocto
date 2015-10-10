@@ -18,5 +18,7 @@ public interface ConfigurationPath extends Component {
 	 * @return the next step in the path
 	 */
 	public String next();
+	
+	public boolean hasNext();
 
 }

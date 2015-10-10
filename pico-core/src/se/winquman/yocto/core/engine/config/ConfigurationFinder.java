@@ -6,15 +6,23 @@ package se.winquman.yocto.core.engine.config;
 import se.winquman.yocto.core.Component;
 
 /**
+ * Can find a specific config item in the context configuration
  * @author Joen
  *
  */
 public interface ConfigurationFinder extends Component {
 	
-	public void setPath(ConfigurationPath path);
-	
+	/**
+	 * 
+	 * @param root the root item of the configuration
+	 */
 	public void setRoot(ConfigurationItem root);
 	
-	public Object findConfiguration();
+	/**
+	 * 
+	 * @param configurationPath the logical path to the config
+	 * @return the object representing
+	 */
+	public Object findConfiguration(ConfigurationPath configurationPath);
 
 }

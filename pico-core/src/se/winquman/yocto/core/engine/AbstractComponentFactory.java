@@ -21,6 +21,9 @@ public abstract class AbstractComponentFactory extends AbstractInstance implemen
 	
 	protected Map<String,Class> components;
 
+
+	protected abstract Map<String,Class> creatables(Map<String,Class> map);
+	
 	/* (non-Javadoc)
 	 * @see se.winquman.yocto.core.ComponentFactory#newComponent()
 	 */
@@ -28,13 +31,24 @@ public abstract class AbstractComponentFactory extends AbstractInstance implemen
 	public Component newComponent() throws NotFoundException, InitializationException {
 		return newComponent(null);
 	}
-
-	/* (non-Javadoc)
-	 * @see se.winquman.yocto.core.ComponentFactory#addCreatable(java.util.Map)
-	 */
-	@Override
-	public void addCreatable(Map<String, Class> map) {
-		components.putAll(map);
+	
+	public Component newComponent(String name) throws NotFoundException, InitializationException {
+		try {
+			Component c = (Component) components.get(name).newInstance();
+			c.create(context, config);
+			return c;
+		} catch (InstantiationException | IllegalAccessException e) {
+			error("Factory could not create the requested component " + name, e);
+			throw new InitializationException("Unable to create component with requirements "
+					+ name, e);
+		} catch (NullPointerException e) {
+			error("Factory could not find a way to create the requested object - it is now known: "
+					+ name, e);
+			throw new NotFoundException("Unable to create component with requirements "
+					+ name, e);
+		}
+		
+		
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +56,7 @@ public abstract class AbstractComponentFactory extends AbstractInstance implemen
 	 */
 	@Override
 	protected void init() {
-		components = new HashMap<String,Class>();
+		components = creatables(new HashMap<String,Class>());
 	}
-
+	
 }

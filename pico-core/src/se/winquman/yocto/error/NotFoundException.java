@@ -14,7 +14,10 @@ public class NotFoundException extends ApplicationRuntimeException {
 	 */
 	public NotFoundException(String string) {
 		super(string);
-		// TODO Auto-generated constructor stub
+	}
+
+	public NotFoundException(String string, Throwable e) {
+		super(string, e);
 	}
 
 }
