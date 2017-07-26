@@ -4,6 +4,7 @@
 package se.yoctocontainer.core.engine.config.impl;
 
 import se.yoctocontainer.core.AbstractComponent;
+import se.yoctocontainer.core.TreeNode;
 import se.yoctocontainer.core.engine.config.Configuration;
 import se.yoctocontainer.core.engine.config.ConfigurationItem;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -30,8 +31,16 @@ public class ConfigurationImpl extends AbstractComponent implements
 	 */
 	@Override
 	public void addConfig(Configuration config) {
-		rootItem = config.getRootItem();
-		debug("Configuration added! " + rootItem.treeToText());
+		if(rootItem == null) {
+			rootItem = config.getRootItem();
+			
+		} else {
+			for(TreeNode node: config.getRootItem().getChildren()) {
+				rootItem.addChild(node);
+			}
+			debug("Configuration merged: " + rootItem.treeToText());
+		}
+		
 	}
 
 	/* (non-Javadoc)

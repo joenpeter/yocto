@@ -3,6 +3,8 @@
  */
 package se.yoctocontainer.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import se.yoctocontainer.core.engine.ContextSeed;
@@ -23,6 +25,7 @@ public abstract class Bootstrap {
 	
 	private RunConfiguration externalRun;
 	private RunConfiguration internalRun;
+	private List<RunConfiguration> additionalRuns;
 	
 	private ContextSeed seed;
 	private Context context;
@@ -30,6 +33,24 @@ public abstract class Bootstrap {
 	private LogSettings logSettings;
 	private Logger logger;
 	
+	/**
+	 * Add a dependency.
+	 * These will be loaded before the main runtime.
+	 * @param run
+	 */
+	public void addDependency(RunConfiguration run) {
+		if(additionalRuns == null) {
+			additionalRuns = new ArrayList<>();
+		}
+		
+		additionalRuns.add(run);
+	}
+	
+	/**
+	 * Boot the application
+	 * @param run this is the runtime for the main application, and will start last
+	 * @throws ApplicationException
+	 */
 	public final void boot(RunConfiguration run) throws ApplicationException {
 
 		// pre-pre-init
@@ -51,12 +72,19 @@ public abstract class Bootstrap {
 		
 		preInitializationHook();
 				
-		// XXX initialize context
+		// initialize context
 		seed.addRuntime(internalRun);
+		
+		if(additionalRuns != null) {
+			for(RunConfiguration runtime: additionalRuns) {
+				seed.addRuntime(runtime);
+			}
+		}
+		
 		seed.addRuntime(externalRun);
 		// end init context
 		
-		// XXX context = ???
+		context = seed.getContext();
 				
 		// load config
 		config.create(seed, config);
