@@ -3,15 +3,13 @@
  */
 package se.winquman.yocto.tester.impl;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
-import se.winquman.yocto.core.AbstractInstance;
 import se.winquman.yocto.tester.MyNameInputer;
 import se.winquman.yocto.tester.MyNameRunner;
+import se.yoctocontainer.core.AbstractInstance;
 
 /**
  * @author jpeter
@@ -46,7 +44,7 @@ public class MyNameInputerImpl extends AbstractInstance implements MyNameInputer
 				name = input.readLine();
 				info("Noted name: " + name);
 				MyNameRunner runner = (MyNameRunner) context.getInstance("MyNameRunner");
-				runner.setName(name);
+				runner.setMyName(name);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

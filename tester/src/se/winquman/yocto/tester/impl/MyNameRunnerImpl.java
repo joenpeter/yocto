@@ -3,9 +3,9 @@
  */
 package se.winquman.yocto.tester.impl;
 
-import se.winquman.yocto.core.AbstractInstance;
-import se.winquman.yocto.error.ConfigurationException;
 import se.winquman.yocto.tester.MyNameRunner;
+import se.yoctocontainer.core.AbstractInstance;
+import se.yoctocontainer.error.ConfigurationException;
 
 /**
  * @author jpeter
@@ -58,7 +58,7 @@ public class MyNameRunnerImpl extends AbstractInstance implements MyNameRunner {
 	 * @see se.winquman.yocto.tester.MyNameRunner#setName(java.lang.String)
 	 */
 	@Override
-	public void setName(String n) {
+	public void setMyName(String n) {
 		synchronized(name) {
 			name = n;
 		}

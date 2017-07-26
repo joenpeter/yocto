@@ -3,7 +3,7 @@
  */
 package se.winquman.yocto.tester;
 
-import se.winquman.yocto.core.Instance;
+import se.yoctocontainer.core.Instance;
 
 /**
  * @author jpeter
@@ -11,6 +11,6 @@ import se.winquman.yocto.core.Instance;
  */
 public interface MyNameRunner extends Instance, Runnable {
 
-	public void setName(String name);
+	public void setMyName(String name);
 	
 }
