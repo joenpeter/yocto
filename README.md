@@ -1,2 +1,2 @@
-# pico
-PiCo, Pico Container - a lightweight Java container
+# yoco
+YoCo, Yocto Container, a light-weight Java container framework.
