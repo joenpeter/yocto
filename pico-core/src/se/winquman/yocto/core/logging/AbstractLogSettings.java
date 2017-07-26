@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 
+import se.winquman.yocto.core.logging.impl.ConsoleFormatter;
+
 /**
  * @author jpeter
  *
@@ -20,9 +22,9 @@ import java.util.logging.StreamHandler;
 public abstract class AbstractLogSettings implements LogSettings {
 
 	protected static String DEFAULT_LOGGING_PATH = "./yocto.log";
-	protected static String START_LOG_MESSAGE = "***** Logging staring *****";
+	protected static String START_LOG_MESSAGE = "***** Logging starting *****";
 	protected static Level DEFAULT_LOG_LEVEL = Level.FINEST;
-	protected static Level DEFAULT_CONSOLE_LEVEL = Level.FINE;
+	protected static Level DEFAULT_CONSOLE_LEVEL = Level.SEVERE;
 	
 	protected final Logger logger;
 	protected final String logFilePath;
@@ -56,7 +58,13 @@ public abstract class AbstractLogSettings implements LogSettings {
 			e.printStackTrace();
 		}
 		
+		consoleFormatter = new ConsoleFormatter();
+		consoleHandler.setFormatter(consoleFormatter);
+		logFileHandler.setFormatter(consoleFormatter);
+		
 		logger.info(START_LOG_MESSAGE);
+		
+		
 	}
 
 	/* (non-Javadoc)

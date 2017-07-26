@@ -18,5 +18,4 @@ public interface ComponentFactory extends Instance {
 	
 	public Component newComponent(String type) throws NotFoundException, InitializationException;
 	
-	public void addCreatable(Map<String,Class> map);
 }

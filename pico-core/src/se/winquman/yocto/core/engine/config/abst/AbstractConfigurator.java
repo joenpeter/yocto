@@ -8,6 +8,7 @@ import se.winquman.yocto.core.engine.config.Configuration;
 import se.winquman.yocto.core.engine.config.ConfigurationFinder;
 import se.winquman.yocto.core.engine.config.ConfigurationPath;
 import se.winquman.yocto.core.engine.config.Configurator;
+import se.winquman.yocto.error.ConfigurationException;
 
 /**
  * @author Joen
@@ -29,14 +30,14 @@ public abstract class AbstractConfigurator extends AbstractInstance implements
 	 * @see se.winquman.yocto.core.Configurator#getConfiguration(java.lang.String)
 	 */
 	@Override
-	public Object getConfiguration(String configPath) {
+	public Object getConfiguration(String configPath) 
+			throws ConfigurationException {
 		check();
 		ConfigurationPath path = (ConfigurationPath) context.newComponent("ConfigurationPath");
 		ConfigurationFinder finder = (ConfigurationFinder) context.newComponent("ConfigurationFinder");
 		path.setPath(configPath);
-		finder.setPath(path);
 		finder.setRoot(mainConfig.getRootItem());
-		return finder.findConfiguration();
+		return finder.findConfiguration(path);
 	}
 
 	/* (non-Javadoc)
@@ -45,7 +46,7 @@ public abstract class AbstractConfigurator extends AbstractInstance implements
 	@Override
 	public void loadConfiguration(Configuration config) {
 		check();
-		logger.fine("Adding configuration: " + config);
+		info("Adding configuration: " + config.getRootItem().treeToText());
 		mainConfig.addConfig(config);
 	}
 

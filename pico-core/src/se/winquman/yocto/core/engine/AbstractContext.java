@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import se.winquman.yocto.core.AbstractInstance;
 import se.winquman.yocto.core.Component;
 import se.winquman.yocto.core.ComponentFactory;
 import se.winquman.yocto.core.Context;
 import se.winquman.yocto.core.Instance;
 import se.winquman.yocto.core.RunConfiguration;
-import se.winquman.yocto.core.Runner;
 import se.winquman.yocto.core.Session;
 import se.winquman.yocto.core.engine.config.Configurator;
 import se.winquman.yocto.core.helpers.InternalSettings;
@@ -29,19 +29,17 @@ import se.winquman.yocto.error.RuntimeEnvironmentException;
  * @author Joen
  *
  */
-public abstract class AbstractContext implements Context {
+public abstract class AbstractContext extends AbstractInstance
+		implements Context, ContextSeed{
 
 	protected Configurator config;
 	protected Session session;
 	
-	protected ComponentFactory defaultFactory;
 	protected Map<String,Class> components;
 	protected Map<String,ComponentFactory> factories;
 	protected Map<String,Instance> instances;
-	protected Map<String,Runner> runners;
 	
 	protected LogSettings logSettings;
-	protected Logger logger;
 	
 	/**
 	 * 
@@ -50,16 +48,10 @@ public abstract class AbstractContext implements Context {
 		components = new HashMap<String,Class>();
 		factories = new HashMap<String,ComponentFactory>();
 		instances = new HashMap<String,Instance>();
-		runners = new HashMap<String,Runner>();
 		config = conf;
 		logSettings = log;
-		logger = logSettings.getConfiguredLogger();
-		try {
-			defaultFactory = InternalSettings.getDefaultComponentFactory(this, conf);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		create(this, config);
 	}
 
 	/* (non-Javadoc)
@@ -87,9 +79,11 @@ public abstract class AbstractContext implements Context {
 	public Instance getInstance(String name) {
 		Instance i = instances.get(name);
 		if(i != null) {
+			debug("Found instance: " + i.getClass().getSimpleName() + "(" + name + ")");
 			if(i.isCheck()) {
 				return i;
 			} else {
+				debug("Initializing " + i.getClass().getSimpleName());
 				i.create(this, config);
 				return i;
 			}
@@ -106,13 +100,14 @@ public abstract class AbstractContext implements Context {
 	public ComponentFactory getComponentFactory(String type) {
 		ComponentFactory i = factories.get(type);
 		if(i != null) {
+			debug("Found component factory: " + i.getClass().getSimpleName() + "(" + type + ")");
 			if(i.isCheck()) {
 				return i;
 			} else {
+				debug("Initializing " + i.getClass().getSimpleName());
 				i.create(this, config);
 				return i;
 			}
-			
 		} else {
 			throw new NotFoundException("Could not find factory: " + type);
 		}
@@ -127,7 +122,7 @@ public abstract class AbstractContext implements Context {
 		
 		Class c = components.get(name);
 		if(c == null) {
-			throw new NotFoundException("Could not find component assigned to a factory: " + name);
+			throw new NotFoundException("Could not find component: " + name);
 		}
 		
 		Component comp = null;
@@ -138,6 +133,8 @@ public abstract class AbstractContext implements Context {
 			throw new NotCreatedException("Could not create new component of type " + name, e);
 		}
 		comp.create(this, config);
+		
+		debug("Created new component: " + comp.getClass().getSimpleName() + " (" + name + ")");
 		
 		return comp;
 	}
@@ -154,11 +151,11 @@ public abstract class AbstractContext implements Context {
 	 * @see se.winquman.yocto.core.Context#addRuntime(se.winquman.yocto.core.RunConfiguration)
 	 */
 	@Override
-	public RuntimeReference addRuntime(RunConfiguration run) {
+	public Context addRuntime(RunConfiguration run) {
 		Map<String,ComponentFactory> factoryMap = new HashMap<String,ComponentFactory>();
 		Map<String,Class> given = run.getComponentFactories();
 		Iterator<Entry<String,Class>> it = given.entrySet().iterator();
-		logger.fine("Loading runtime environment: " + run);
+		info("Loading runtime environment: " + run);
 		
 		while(it.hasNext()) {
 			Entry<String,Class> entry = it.next();
@@ -168,7 +165,7 @@ public abstract class AbstractContext implements Context {
 			} catch (InstantiationException | IllegalAccessException | ClassCastException e) {
 				throw new RuntimeEnvironmentException("Could not create class: " + entry.getValue().toString(), e);
 			}
-			logger.fine("Built factory: " + c.toString());
+			info("Built factory: " + c.toString());
 			factoryMap.put(entry.getKey(), c);
 		}	
 		factories.putAll(factoryMap);
@@ -177,7 +174,7 @@ public abstract class AbstractContext implements Context {
 		given = run.getComponents();
 		it = given.entrySet().iterator();
 		while(it.hasNext()) {
-			logger.fine("Registered component: " + it.next().getValue());
+			info("Registered component: " + it.next().getValue());
 		}
 		components.putAll(given);
 		
@@ -194,35 +191,34 @@ public abstract class AbstractContext implements Context {
 			} catch (InstantiationException | IllegalAccessException | ClassCastException e) {
 				throw new RuntimeEnvironmentException("Could not create class: " + entry.getValue().toString(), e);
 			}
-			logger.fine("Built instance: " + i.toString());
+			info("Built instance: " + i.toString());
 			instanceMap.put(entry.getKey(), i);
 		}
 		instances.putAll(instanceMap);
 		
-		// ----------
-		Map<String,Runner> runnerMap = new HashMap<String,Runner>();
-		given = run.getRunners();
-		it = given.entrySet().iterator();
-		
-		while(it.hasNext()) {
-			Entry<String,Class> entry = it.next();
-			Runner r;
-			try {
-				r = (Runner) entry.getValue().newInstance();
-				r.create(this, config);
-			} catch (InstantiationException | IllegalAccessException | ClassCastException e) {
-				throw new RuntimeEnvironmentException("Could not create class: " + entry.getValue().toString(), e);
-			}
-			logger.fine("Built runner: " + r.toString());
-			runnerMap.put(entry.getKey(), r);
-		}
-		runners.putAll(runnerMap);
-		
 		//----------
-		ContextRuntimeReference runtime = new ContextRuntimeReference();
-		runtime.create(this, config);
-		runtime.addRunners(runners);
-		return runtime;
+		Iterator<Instance> iterator = instances.values().iterator();
+		Instance instance;
+		while(iterator.hasNext()) {
+			instance = iterator.next();
+			if(instance instanceof Runnable) {
+				instance.create(this, config);
+				info("Starting: " + instance.getClass().getSimpleName());
+				new Thread((Runnable) instance).start();
+			}
+		}
+		
+		return this;
+	}
+	
+	@Override
+	public Iterator<Instance> getAllInstances() {
+		return instances.values().iterator();
+	}
+
+	@Override
+	protected void init() {
+		
 	}
 
 }

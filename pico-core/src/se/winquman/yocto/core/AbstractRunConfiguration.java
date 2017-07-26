@@ -33,14 +33,6 @@ public abstract class AbstractRunConfiguration implements RunConfiguration, Runt
 	public Map<String, Class> getComponentFactories() {
 		return componentFactories(new HashMap<String,Class>());
 	}
-
-	/* (non-Javadoc)
-	 * @see se.winquman.yocto.core.RunConfiguration#getRunners()
-	 */
-	@Override
-	public Map<String, Class> getRunners() {
-		return runners(new HashMap<String,Class>());
-	}
 	
 	/* (non-Javadoc)
 	 * @see se.winquman.yocto.core.RunConfiguration#getRunners()

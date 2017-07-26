@@ -11,4 +11,6 @@ public interface ConfigurationPoint extends ConfigurationItem {
 
 	public Object getValue();
 	
+	public void setValue(Object o);
+	
 }
