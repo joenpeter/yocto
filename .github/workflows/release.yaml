@@ -9,7 +9,6 @@ permissions:
   packages: write
 jobs:
   test:
-    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -24,6 +23,7 @@ jobs:
         run: mvn clean install
 
   release:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: write # Needed for creating a new tag and release
@@ -46,6 +46,7 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           extra_plugins: |
             @semantic-release/exec
