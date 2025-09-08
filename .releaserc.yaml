@@ -9,4 +9,4 @@ plugins:
   - - '@semantic-release/exec'
     - verifyConditionsCmd: 'echo "Verifying conditions..."'
       prepareCmd: 'mvn versions:set -DnewVersion=${nextRelease.version} -B'
-      publishCmd: 'mvn deploy --settings .github/settings.xml'
+      publishCmd: 'mvn deploy --settings settings.xml'

@@ -26,6 +26,13 @@
       <url>https://maven.pkg.github.com/joenpeter/yocto</url>
     </repository>
   </distributionManagement>
+  
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/joenpeter/yocto</url>
+   </repository>
+  </repositories>
 
   <properties>
       <maven.compiler.source>17</maven.compiler.source>
