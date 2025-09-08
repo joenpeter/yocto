@@ -1,0 +1,14 @@
+
+branches:
+  - main
+  - master
+plugins:
+  - '@semantic-release/commit-analyzer'
+  - '@semantic-release/release-notes-generator'
+  - '@semantic-release/github'
+  # The 'exec' plugin is key to running your Maven command
+  - - '@semantic-release/exec'
+    - verifyConditionsCmd: 'echo "Verifying conditions..."'
+      prepareCmd: 'mvn versions:set -DnewVersion=${nextRelease.version} -B'
+      publishCmd: 'mvn deploy'
+      
