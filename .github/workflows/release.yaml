@@ -41,6 +41,9 @@ jobs:
           java-version-file: .java-version
           server-id: github 
           settings-path: ${{ github.workspace }}
+          
+      - name: Build with Maven
+        run: mvn clean install
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
