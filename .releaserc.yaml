@@ -1,6 +1,5 @@
-
+# .releaserc.yml
 branches:
-  - main
   - master
 plugins:
   - '@semantic-release/commit-analyzer'
@@ -10,5 +9,4 @@ plugins:
   - - '@semantic-release/exec'
     - verifyConditionsCmd: 'echo "Verifying conditions..."'
       prepareCmd: 'mvn versions:set -DnewVersion=${nextRelease.version} -B'
-      publishCmd: 'mvn deploy'
-      
+      publishCmd: 'mvn deploy --settings .github/settings.xml'
