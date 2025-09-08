@@ -27,18 +27,18 @@
     </repository>
   </distributionManagement>
   
+  <properties>
+      <maven.compiler.source>17</maven.compiler.source>
+      <maven.compiler.target>17</maven.compiler.target>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>  
+
   <repositories>
     <repository>
       <id>github</id>
       <url>https://maven.pkg.github.com/joenpeter/yocto</url>
    </repository>
   </repositories>
-
-  <properties>
-      <maven.compiler.source>17</maven.compiler.source>
-      <maven.compiler.target>17</maven.compiler.target>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 
   <build>
     <plugins>
