@@ -33,13 +33,6 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>  
 
-  <repositories>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/joenpeter/yocto</url>
-   </repository>
-  </repositories>
-  
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -48,6 +41,13 @@
       <scope>test</scope>    
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/joenpeter/yocto</url>
+   </repository>
+  </repositories>
 
   <build>
     <plugins>
