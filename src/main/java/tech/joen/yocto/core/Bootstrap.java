@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import tech.joen.yocto.Context;
+import tech.joen.yocto.core.impl.ContextImpl;
 
 /**
  * Bootstraps the yocto container. Does the following:
@@ -30,12 +30,18 @@ public class Bootstrap {
    * @param args
    */
   public static void main(String[] args) {
+    startup();
+  }
+  
+  static Context startup() {
     assembleLogger();
     logger.log(Level.INFO, "Starting to log. Startup initiated.");
     
     loadApplicationContext();
     loadComponents();
     startStartables();
+    
+    return context;
   }
 
   private static void startStartables() {
@@ -49,8 +55,7 @@ public class Bootstrap {
   }
 
   private static void loadApplicationContext() {
-    // TODO Auto-generated method stub
-    
+    context = new ContextImpl();    
   }
 
   private static void assembleLogger() {

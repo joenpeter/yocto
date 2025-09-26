@@ -3,6 +3,9 @@
  */
 package tech.joen.yocto;
 
+import tech.joen.yocto.core.Context;
+import tech.joen.yocto.core.impl.ApplicationException;
+
 /**
  * This represent a single component inside a Yocto application.
  * A component can in runtime be initiated as a singleton or as a factory.
@@ -21,7 +24,7 @@ public interface Component {
    * For a factory, this means every time a new instance is initiated.
    * For a Singleton, this means on application startup. 
    */
-  void create();
+  void create() throws ApplicationException;
   
   /**
    * Get the priority of this component implementation.
@@ -31,6 +34,13 @@ public interface Component {
    * @return the priority, with higher meaning higher priority
    */
   int getPriority();
+  
+  /**
+   * Initialize this component - done before calling create(), right after calling default constructor
+   * @param context the context of the application
+   * @throws ApplicationException 
+   */
+  void init(Context context) throws ApplicationException;
   
   
 }
