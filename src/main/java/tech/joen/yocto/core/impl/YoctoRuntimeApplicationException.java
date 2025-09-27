@@ -21,6 +21,10 @@ public class YoctoRuntimeApplicationException extends RuntimeException {
     super(message, cause);
   }
   
+  public Throwable unwrap() {
+    return getCause();
+  }
+  
   public ApplicationException toApplicationException() {
     ApplicationException ae = new ApplicationException(getMessage(), getCause());
     ae.setStackTrace(getStackTrace());
