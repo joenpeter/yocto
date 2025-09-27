@@ -36,9 +36,10 @@ public interface Component {
   int getPriority();
   
   /**
-   * Initialize this component - done before calling create(), right after calling default constructor
+   * Initialize this component - done before calling create(), right after calling default constructor.
+   * This is called from the component framework, and can only be called once.
    * @param context the context of the application
-   * @throws ApplicationException 
+   * @throws ApplicationException if something goes wrong during init
    */
   void init(Context context) throws ApplicationException;
   

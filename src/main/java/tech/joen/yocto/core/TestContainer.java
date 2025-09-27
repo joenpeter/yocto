@@ -5,7 +5,7 @@ package tech.joen.yocto.core;
  */
 public class TestContainer {
 
-  Context context; 
+  ComponentRegister register; 
 
   public static TestContainerBuilder builder() {
     return new TestContainerBuilder();
@@ -16,11 +16,11 @@ public class TestContainer {
   }
  
   public void startup() {
-    context = Bootstrap.startup();
+    register = Bootstrap.startup();
   }
   
-  public Context getContext() {
-    return context;
+  public ComponentRegister getRegister() {
+    return register;
   }
   
   public static class TestContainerBuilder {

@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import tech.joen.yocto.core.impl.ClassGraphComponentLoader;
+import tech.joen.yocto.core.impl.ComponentFactoryImpl;
+import tech.joen.yocto.core.impl.ComponentRegisterImpl;
 import tech.joen.yocto.core.impl.ContextImpl;
 
 /**
@@ -20,11 +23,15 @@ import tech.joen.yocto.core.impl.ContextImpl;
  * - Initiates all singletons it may find
  * - Start startable singletons
  * 
+ * TODO
+ * ComponentLoader + Scanner?
+ * ComponentRegister
+ * ComponentFactory
+ * 
  */
 public class Bootstrap {
   
   static Logger logger;
-  static Context context;
 
   /**
    * @param args
@@ -33,29 +40,36 @@ public class Bootstrap {
     startup();
   }
   
-  static Context startup() {
+  static ComponentRegister startup() {
     assembleLogger();
     logger.log(Level.INFO, "Starting to log. Startup initiated.");
     
-    loadApplicationContext();
-    loadComponents();
-    startStartables();
     
-    return context;
+    ComponentRegister register = loadComponents();
+//    createComponents();
+//    startStartables();
+    
+    return register;
   }
 
-  private static void startStartables() {
-    // TODO Auto-generated method stub
-    
+  private static ComponentRegister loadComponents() {
+    ComponentLoader loader = createComponentLoader();
+    loader.loadComponents();
+    ComponentFactory factory = createComponentFactory();
+    ComponentRegisterBuilder register = createComponentRegisterBuilder();
+    return register.fromLoader(loader).withFactory(factory).build();
   }
 
-  private static void loadComponents() {
-    // TODO Auto-generated method stub
-    
+  private static ComponentFactory createComponentFactory() {
+    return new ComponentFactoryImpl();
   }
 
-  private static void loadApplicationContext() {
-    context = new ContextImpl();    
+  private static ComponentRegisterBuilder createComponentRegisterBuilder() {
+    return ComponentRegisterImpl.builder();
+  }
+
+  private static ComponentLoader createComponentLoader() {
+    return new ClassGraphComponentLoader();
   }
 
   private static void assembleLogger() {
