@@ -22,30 +22,37 @@ public class ComponentRegisterImpl implements ComponentRegister {
   private Map<String, Singleton> singletons;
   private ComponentFactory factory;
 
-  public ComponentRegisterImpl(ComponentFactory factory) {
-    components = new ConcurrentHashMap<>();
-    singletons = new ConcurrentHashMap<>();
+  private ComponentRegisterImpl(ComponentFactory factory, Map<String, Class<Singleton>> singletonClasses) {
     this.factory = factory;
+    Map<String, Singleton> map = new ConcurrentHashMap<>();
+    singletonClasses.forEach((name, clazz) -> map.put(name, createSingleton(clazz, name)));
+    singletons = Map.copyOf(map);
   }
-  
+    
+  private Singleton createSingleton(Class<Singleton> clazz, String name) {
+    return factory.createComponent(clazz, createContext(name));
+  }
+
+  @SuppressWarnings("unchecked")
   @Override
   public <T extends Component> Optional<T> newComponent(String name) throws ApplicationException {
     try {
-      Context context = createContext();
       return Optional.ofNullable(components.get(name))
-          .map(c -> factory.createComponent(c, context));
+          .map(c -> factory.createComponent(c, createContext(name)))
+          .map(c -> (T) c);
     } catch (YoctoRuntimeApplicationException e) {
       throw e.toApplicationException();
     }
   }
 
+  @SuppressWarnings({"unchecked"})
   @Override
   public <T extends Singleton> Optional<T> getSingleton(String name) {
     return (Optional<T>) Optional.ofNullable(singletons.get(name));
   }
 
-  private Context createContext() {
-    return new ContextImpl(this);
+  private Context createContext(String name) {
+    return new ContextImpl(this, name);
   }
   
   public static ComponentRegisterBuilder builder() {
@@ -56,11 +63,11 @@ public class ComponentRegisterImpl implements ComponentRegister {
 
     ComponentLoader loader;
     ComponentFactory factory;
-    
+
     @Override
     public ComponentRegister build() {
-      ComponentRegisterImpl register = new ComponentRegisterImpl(factory);
-      register.components = loader.getComponents();
+      ComponentRegisterImpl register = new ComponentRegisterImpl(factory, loader.getSingletons());
+      register.components = Map.copyOf(loader.getComponents());
       return register;
     }
 

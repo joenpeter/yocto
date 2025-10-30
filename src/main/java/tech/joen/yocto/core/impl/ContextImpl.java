@@ -13,10 +13,12 @@ import tech.joen.yocto.core.Context;
  * Base implementation of Context
  */
 public class ContextImpl implements Context {
-  ComponentRegister register;
+  private ComponentRegister register;
+  private String name;
   
-  public ContextImpl(ComponentRegister register) {
+  public ContextImpl(ComponentRegister register, String name) {
     this.register = register;
+    this.name = name;
   }
 
   @Override
@@ -27,6 +29,11 @@ public class ContextImpl implements Context {
   @Override
   public Optional<Component> newComponent(String name) throws ApplicationException {
     return register.newComponent(name);
+  }
+
+  @Override
+  public String getComponentName() {
+    return name;
   }
 
 }
