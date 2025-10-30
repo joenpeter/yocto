@@ -14,6 +14,12 @@ import tech.joen.yocto.core.impl.ApplicationException;
 public interface Context {
   
   /**
+   * Gets the name of the component that this context is associated with
+   * @return the name of the component
+   */
+  String getComponentName();
+  
+  /**
    * Get a Singleton with the specific name.
    * @param name the name of the Singleton to get
    * @return the requested singleton, or empty if none exist

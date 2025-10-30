@@ -20,24 +20,29 @@ public abstract class AbstractComponent implements Component {
     // do nothing
   }
   
-  @Override
-  public void create() {
-    // do nothing
-  }
+  
+  /**
+   * Calls when the component is ceated.
+   * For a factory, this means every time a new instance is initiated.
+   * For a Singleton, this means on application startup. 
+   */
+  abstract protected void create() throws ApplicationException;
 
   @Override
   public final void init(Context context) throws ApplicationException {
     if(initialized) {
-      throw new ApplicationException("Component already initialized: " + getName());
+      throw new ApplicationException("Component already initialized: " + getComponentName());
     }
     initialized = true;
     this.context = context;
-    logger = Logger.getLogger(getName());
+    logger = Logger.getLogger(getComponentName());
+    info("CREATE: " + getComponentName());
+    create();
   }
   
   @Override
-  public String getName() {
-    return getClass().getName();
+  public final String getComponentName() {
+    return context.getComponentName();
   }
 
   @Override

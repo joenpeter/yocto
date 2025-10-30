@@ -16,5 +16,5 @@ public interface ComponentRegister {
   public <T extends Component> Optional<T> newComponent(String name) throws ApplicationException;
   
   public <T extends Singleton> Optional<T> getSingleton(String name);
-
+  
 }

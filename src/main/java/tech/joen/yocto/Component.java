@@ -17,14 +17,7 @@ public interface Component {
    * Globally unique name of this component
    * @return
    */
-  String getName();
-  
-  /**
-   * Calls when the component is ceated.
-   * For a factory, this means every time a new instance is initiated.
-   * For a Singleton, this means on application startup. 
-   */
-  void create() throws ApplicationException;
+  String getComponentName();
   
   /**
    * Get the priority of this component implementation.

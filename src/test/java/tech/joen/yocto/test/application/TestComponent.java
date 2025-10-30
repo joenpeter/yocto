@@ -1,6 +1,8 @@
 package tech.joen.yocto.test.application;
 
-public interface TestComponent {
+import tech.joen.yocto.Component;
+
+public interface TestComponent extends Component {
 
   boolean isCreated();
 }

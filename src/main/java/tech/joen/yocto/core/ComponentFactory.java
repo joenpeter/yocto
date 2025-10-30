@@ -3,7 +3,6 @@
  */
 package tech.joen.yocto.core;
 
-import java.util.List;
 import tech.joen.yocto.Component;
 
 /**
@@ -11,7 +10,6 @@ import tech.joen.yocto.Component;
  */
 public interface ComponentFactory {
 
-  public <T extends Component> T createComponent(Class<Component> from, Context context);
-  
-  public List<Component> createTogether(List<Class<Component>> from, Context context); 
+  public <T extends Component> T createComponent(Class<T> from, Context context);
+
 }
