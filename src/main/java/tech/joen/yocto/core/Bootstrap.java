@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import tech.joen.yocto.Singleton;
 import tech.joen.yocto.core.impl.ClassGraphComponentLoader;
 import tech.joen.yocto.core.impl.ComponentFactoryImpl;
 import tech.joen.yocto.core.impl.ComponentRegisterImpl;
@@ -46,10 +47,27 @@ public class Bootstrap {
     
     
     ComponentRegister register = loadComponents();
-//    createComponents();
-//    startStartables();
+    startStartables(register);
     
     return register;
+  }
+
+  private static void startStartables(ComponentRegister register) {
+    register.allSingletons().stream()
+        .filter(Runnable.class::isInstance)
+        .map(Bootstrap::logStartup)
+        .map(Runnable.class::cast)
+        .forEach(Bootstrap::startComponent);
+  }
+  
+  private static Runnable startComponent(Runnable c) {
+    Thread.startVirtualThread(c);
+    return c;
+  }
+  
+  private static Singleton logStartup(Singleton c) {
+    logger.log(Level.INFO, "STARTING: " + c.getComponentName());
+    return c;
   }
 
   private static ComponentRegister loadComponents() {

@@ -3,6 +3,7 @@
  */
 package tech.joen.yocto.core;
 
+import java.util.List;
 import java.util.Optional;
 import tech.joen.yocto.Component;
 import tech.joen.yocto.Singleton;
@@ -13,8 +14,10 @@ import tech.joen.yocto.core.impl.ApplicationException;
  */
 public interface ComponentRegister {
   
-  public <T extends Component> Optional<T> newComponent(String name) throws ApplicationException;
+  <T extends Component> Optional<T> newComponent(String name) throws ApplicationException;
   
-  public <T extends Singleton> Optional<T> getSingleton(String name);
+  <T extends Singleton> Optional<T> getSingleton(String name);
+  
+  List<Singleton> allSingletons();
   
 }

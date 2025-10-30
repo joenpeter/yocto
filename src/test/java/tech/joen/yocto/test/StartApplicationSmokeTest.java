@@ -49,7 +49,7 @@ class StartApplicationSmokeTest {
     register.getSingleton(TEST_SINGLETON_RUNNABLE)
         .map(c -> (TestSingleton) c)
         .map(c -> {assertTrue(c.isCreated(), "Check create was called on singleton"); return c;})
-//        .map(c -> {assertTrue(c.isStarted(), "Check run was called on runnable singleton"); return c;})
+        .map(c -> {assertTrue(c.isStarted(), "Check run was called on runnable singleton"); return c;})
         .map(c -> {assertEquals(TEST_SINGLETON_RUNNABLE, c.getComponentName(), "Check reported component name matches for Runnable Singleton"); return c;})
         .orElseThrow();
     
