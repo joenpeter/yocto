@@ -10,6 +10,7 @@ import tech.joen.yocto.AbstractComponent;
  */
 public class TestSingletonImpl extends AbstractComponent implements TestSingleton {
 
+  public static final String COMPONENTNAME = "TestSingleton1";
   boolean started = false;
   boolean created = false;
   
@@ -17,12 +18,7 @@ public class TestSingletonImpl extends AbstractComponent implements TestSingleto
   public void create() {
     created = true;
   }
-  
-  @Override
-  public String getName() {
-    return "TestSingleton1";
-  }
-    
+      
   @Override
   public void run() {
     info("Started TestSingleton");
