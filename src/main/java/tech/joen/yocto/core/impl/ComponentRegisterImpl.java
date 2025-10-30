@@ -3,6 +3,7 @@
  */
 package tech.joen.yocto.core.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +50,11 @@ public class ComponentRegisterImpl implements ComponentRegister {
   @Override
   public <T extends Singleton> Optional<T> getSingleton(String name) {
     return (Optional<T>) Optional.ofNullable(singletons.get(name));
+  }
+
+  @Override
+  public List<Singleton> allSingletons() {
+    return List.copyOf(singletons.values());
   }
 
   private Context createContext(String name) {
