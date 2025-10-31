@@ -91,4 +91,16 @@ public class ComponentRegisterImpl implements ComponentRegister {
     
   }
 
+  @Override
+  public <T extends Component> Optional<T> newComponent(Class<T> clazz) {
+    // TODO Auto-generated method stub
+    return Optional.empty();
+  }
+
+  @Override
+  public <T extends Singleton> Optional<T> getSingleton(Class<T> clazz) {
+    // TODO Auto-generated method stub
+    return Optional.empty();
+  }
+
 }

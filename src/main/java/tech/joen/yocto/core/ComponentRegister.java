@@ -19,5 +19,9 @@ public interface ComponentRegister {
   <T extends Singleton> Optional<T> getSingleton(String name);
   
   List<Singleton> allSingletons();
+
+  <T extends Component> Optional<T> newComponent(Class<T> clazz);
+  
+  <T extends Singleton> Optional<T> getSingleton(Class<T> clazz);
   
 }
