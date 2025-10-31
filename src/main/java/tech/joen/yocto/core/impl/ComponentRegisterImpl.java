@@ -21,11 +21,17 @@ import tech.joen.yocto.core.Context;
 public class ComponentRegisterImpl implements ComponentRegister {
   private Map<String, Class<Component>> components;
   private Map<String, Singleton> singletons;
+  private Map<Class<Component>, Class<Component>> componentMappings;
+  private Map<Class<Singleton>, Singleton> singletonMappings;
   private ComponentFactory factory;
 
-  private ComponentRegisterImpl(ComponentFactory factory, Map<String, Class<Singleton>> singletonClasses) {
+  private ComponentRegisterImpl(ComponentFactory factory, 
+      Map<String, Class<Singleton>> singletonClasses, 
+      Map<Class<Singleton>, Class<Singleton>> singletonInterfaceMappings) {
+    
     this.factory = factory;
     Map<String, Singleton> map = new ConcurrentHashMap<>();
+    // TODO Rework how we handle singletons to put them all in 2 lists
     singletonClasses.forEach((name, clazz) -> map.put(name, createSingleton(clazz, name)));
     singletons = Map.copyOf(map);
   }
@@ -46,10 +52,29 @@ public class ComponentRegisterImpl implements ComponentRegister {
     }
   }
 
+  @Override
+  public <T extends Component> Optional<T> newComponent(Class<T> clazz) throws ApplicationException {
+    try {
+      return Optional.ofNullable(componentMappings.get(clazz))
+          .map(c -> factory.createComponent(c, createContext(null)))
+          .filter(clazz::isInstance)
+          .map(clazz::cast);
+    } catch (YoctoRuntimeApplicationException e) {
+      throw e.toApplicationException();
+    }
+  }
+
   @SuppressWarnings({"unchecked"})
   @Override
   public <T extends Singleton> Optional<T> getSingleton(String name) {
-    return (Optional<T>) Optional.ofNullable(singletons.get(name));
+    return Optional.ofNullable(singletons.get(name)).map(c -> (T) c);
+  }
+
+  @Override
+  public <T extends Singleton> Optional<T> getSingleton(Class<T> clazz) {
+    return Optional.ofNullable(singletonMappings.get(clazz))
+        .filter(clazz::isInstance)
+        .map(clazz::cast);
   }
 
   @Override
@@ -72,7 +97,9 @@ public class ComponentRegisterImpl implements ComponentRegister {
 
     @Override
     public ComponentRegister build() {
-      ComponentRegisterImpl register = new ComponentRegisterImpl(factory, loader.getSingletons());
+      // TODO get the secondary singleton list from loader
+      ComponentRegisterImpl register = new ComponentRegisterImpl(factory, loader.getSingletons(), null);
+      // TODO also get component mapping based on class
       register.components = Map.copyOf(loader.getComponents());
       return register;
     }
@@ -89,18 +116,6 @@ public class ComponentRegisterImpl implements ComponentRegister {
       return this;
     }
     
-  }
-
-  @Override
-  public <T extends Component> Optional<T> newComponent(Class<T> clazz) {
-    // TODO Auto-generated method stub
-    return Optional.empty();
-  }
-
-  @Override
-  public <T extends Singleton> Optional<T> getSingleton(Class<T> clazz) {
-    // TODO Auto-generated method stub
-    return Optional.empty();
   }
 
 }
