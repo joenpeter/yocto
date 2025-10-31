@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import tech.joen.yocto.core.ComponentRegister;
 import tech.joen.yocto.core.Context;
 import tech.joen.yocto.core.TestContainer;
+import tech.joen.yocto.core.impl.ApplicationException;
 import tech.joen.yocto.test.application.TestComponent;
 import tech.joen.yocto.test.application.TestSingleton;
 
@@ -63,9 +64,8 @@ class StartApplicationSmokeTest {
     assertFalse(register.newComponent(NOT_INITIALIZABLE_COMPONENT).isPresent());
   }
   
-  @Disabled("Not yet implemented.")
   @Test
-  void multiImplementationTest() {
+  void multiImplementationTest() throws ApplicationException {
     TestContainer container = TestContainer.builder().build();
     container.startup();
     ComponentRegister register = container.getRegister();

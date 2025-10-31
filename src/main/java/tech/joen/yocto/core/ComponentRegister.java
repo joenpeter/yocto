@@ -20,7 +20,7 @@ public interface ComponentRegister {
   
   List<Singleton> allSingletons();
 
-  <T extends Component> Optional<T> newComponent(Class<T> clazz);
+  <T extends Component> Optional<T> newComponent(Class<T> clazz) throws ApplicationException;
   
   <T extends Singleton> Optional<T> getSingleton(Class<T> clazz);
   
