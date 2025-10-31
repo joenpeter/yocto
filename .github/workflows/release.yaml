@@ -1,9 +1,7 @@
 name: Release
 on:
   push:
-    branches:
-      - main
-      - master
+    
 permissions:
   contents: write
   packages: write
@@ -23,6 +21,7 @@ jobs:
         run: mvn clean install
 
   release:
+    if: github.ref == 'refs/heads/master'
     needs: test
     runs-on: ubuntu-latest
     permissions:
