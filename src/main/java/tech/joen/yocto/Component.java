@@ -12,6 +12,7 @@ import tech.joen.yocto.core.impl.ApplicationException;
  */
 public interface Component {
   int PRIORITY_DEFAULT = 0;
+  String NAME = "COMPONENTNAME";
 
   /**
    * Globally unique name of this component

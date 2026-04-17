@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import tech.joen.yocto.Component;
 import tech.joen.yocto.Singleton;
 import tech.joen.yocto.core.ComponentFactory;
@@ -50,7 +51,7 @@ public class ComponentRegisterImpl implements ComponentRegister {
   public <T extends Component> Optional<T> newComponent(Class<T> clazz) throws ApplicationException {
     try {
       return Optional.ofNullable(componentMappings.get(clazz))
-          .map(c -> factory.createComponent(c, createContext(c.getSimpleName())))  // TODO better name
+          .map(c -> factory.createComponent(c, createContext(c)))  // TODO better name
           .filter(clazz::isInstance)
           .map(clazz::cast);
     } catch (YoctoRuntimeApplicationException e) {
@@ -78,6 +79,18 @@ public class ComponentRegisterImpl implements ComponentRegister {
 
   private Context createContext(String name) {
     return new ContextImpl(this, name);
+  }
+  
+  private Context createContext(Class<Component> c) {
+    String name;
+    try {
+      name = (String) c.getDeclaredField(Component.NAME).get(null);
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegister").warning("No component name declared for " + c.getName());;
+      name = c.getCanonicalName();
+    }
+    return createContext(name);
   }
   
   public static ComponentRegisterBuilder builder() {

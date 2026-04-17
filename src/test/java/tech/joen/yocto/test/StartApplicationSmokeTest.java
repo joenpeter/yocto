@@ -72,13 +72,13 @@ class StartApplicationSmokeTest {
     register.newComponent(TestComponent.class)
         .map(c -> (TestComponent) c)
         .map(c -> {assertTrue(c.isCreated(), "Check create was called"); return c;})
-//        .map(c -> {assertEquals(TEST_COMPONENT_HIGHER_PRIO, c.getComponentName(), "Check name matches the higher priority component"); return c;})
+        .map(c -> {assertEquals(TEST_COMPONENT_HIGHER_PRIO, c.getComponentName(), "Check name matches the higher priority component"); return c;})
         .orElseThrow();
     
     register.getSingleton(TestSingleton.class)
         .map(c -> (TestSingleton) c)
         .map(c -> {assertTrue(c.isCreated(), "Check create was called"); return c;})
-//        .map(c -> {assertEquals(TEST_SINGLETON_HIGHER_PRIO, c.getComponentName(), "Check name matches higher priority singleton"); return c;})
+        .map(c -> {assertEquals(TEST_SINGLETON_HIGHER_PRIO, c.getComponentName(), "Check name matches higher priority singleton"); return c;})
         .orElseThrow();
   }
 
