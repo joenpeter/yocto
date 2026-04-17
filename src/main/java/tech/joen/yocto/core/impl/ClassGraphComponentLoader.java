@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+import java.util.logging.Logger;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -58,7 +59,9 @@ public class ClassGraphComponentLoader implements ComponentLoader {
   
   @SuppressWarnings({"unchecked", "rawtypes"})
   private void addComponentClassMapping(ClassInfo inter, Class origin) {
-    componentClassMapping.put(inter.loadClass(), origin);
+    //componentClassMapping.put(inter.loadClass(), origin);
+    Class c = inter.loadClass();
+    componentClassMapping.merge(c, origin, ComponentRegisterImpl::pickComponentOnPriority);
   }
 
   private boolean isSingleton(ClassInfo info) {

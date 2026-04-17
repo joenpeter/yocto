@@ -45,11 +45,6 @@ public abstract class AbstractComponent implements Component {
     return context.getComponentName();
   }
 
-  @Override
-  public int getPriority() {
-    return 0;
-  }
-  
   protected Context getContext() {
     return context;
   }

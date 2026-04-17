@@ -51,7 +51,7 @@ public class ComponentRegisterImpl implements ComponentRegister {
   public <T extends Component> Optional<T> newComponent(Class<T> clazz) throws ApplicationException {
     try {
       return Optional.ofNullable(componentMappings.get(clazz))
-          .map(c -> factory.createComponent(c, createContext(c)))  // TODO better name
+          .map(c -> factory.createComponent(c, createContext(c)))
           .filter(clazz::isInstance)
           .map(clazz::cast);
     } catch (YoctoRuntimeApplicationException e) {
@@ -97,6 +97,30 @@ public class ComponentRegisterImpl implements ComponentRegister {
     return new ComponentRegisterBuilderImpl();
   }
   
+  static Class<Component> pickComponentOnPriority(Class<Component> component1, Class<Component> component2) {
+    try {
+      return (component1.getField(Component.PRIORITY).getInt(null) > component2.getField(Component.PRIORITY).getInt(null)) ? component1 : component2;
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegistry").warning("No Priority set or other issue for "
+          + component1.getName() + " and " + component2.getName());
+      
+      return component1;
+    }
+  }
+  
+  static Singleton pickComponentOnPriority(Singleton component1, Singleton component2) {
+    try {
+      return (component1.getClass().getField(Component.PRIORITY).getInt(null) > component2.getClass().getField(Component.PRIORITY).getInt(null)) ? component1 : component2;
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegistry").warning("No Priority set or other issue for "
+          + component1.getComponentName() + " and " + component2.getComponentName());
+      
+      return component1;
+    }
+  }
+  
   public static class ComponentRegisterBuilderImpl implements ComponentRegisterBuilder {
 
     ComponentLoader loader;
@@ -125,7 +149,7 @@ public class ComponentRegisterImpl implements ComponentRegister {
     private void handleSingleton(String name, Class<Singleton> singleton) {
       Singleton instance = register.createSingleton(singleton, name);
       singletonMap.put(name, instance);
-      singletonInterfaces.get(singleton).forEach(c -> singletonMapping.put(c, instance));
+      singletonInterfaces.get(singleton).forEach(c -> singletonMapping.merge(c, instance, ComponentRegisterImpl::pickComponentOnPriority));
     }
     
     @Override

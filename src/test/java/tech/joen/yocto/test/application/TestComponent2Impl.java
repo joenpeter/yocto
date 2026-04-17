@@ -5,6 +5,7 @@ import tech.joen.yocto.AbstractComponent;
 public class TestComponent2Impl extends AbstractComponent implements TestComponent {
 
   public static final String COMPONENTNAME = "TestComponent2";
+  public static final int COMPONENTPRIORITY = 5;
   
   private boolean created = false;
   
