@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import tech.joen.yocto.Component;
 import tech.joen.yocto.Singleton;
 import tech.joen.yocto.core.ComponentFactory;
@@ -21,13 +22,13 @@ import tech.joen.yocto.core.Context;
 public class ComponentRegisterImpl implements ComponentRegister {
   private Map<String, Class<Component>> components;
   private Map<String, Singleton> singletons;
+  private Map<Class<?>, Class<Component>> componentMappings;
+  private Map<Class<?>, Singleton> singletonMappings;
   private ComponentFactory factory;
 
-  private ComponentRegisterImpl(ComponentFactory factory, Map<String, Class<Singleton>> singletonClasses) {
+  private ComponentRegisterImpl(ComponentFactory factory) {
+    
     this.factory = factory;
-    Map<String, Singleton> map = new ConcurrentHashMap<>();
-    singletonClasses.forEach((name, clazz) -> map.put(name, createSingleton(clazz, name)));
-    singletons = Map.copyOf(map);
   }
     
   private Singleton createSingleton(Class<Singleton> clazz, String name) {
@@ -46,10 +47,29 @@ public class ComponentRegisterImpl implements ComponentRegister {
     }
   }
 
+  @Override
+  public <T extends Component> Optional<T> newComponent(Class<T> clazz) throws ApplicationException {
+    try {
+      return Optional.ofNullable(componentMappings.get(clazz))
+          .map(c -> factory.createComponent(c, createContext(c)))
+          .filter(clazz::isInstance)
+          .map(clazz::cast);
+    } catch (YoctoRuntimeApplicationException e) {
+      throw e.toApplicationException();
+    }
+  }
+
   @SuppressWarnings({"unchecked"})
   @Override
   public <T extends Singleton> Optional<T> getSingleton(String name) {
-    return (Optional<T>) Optional.ofNullable(singletons.get(name));
+    return Optional.ofNullable(singletons.get(name)).map(c -> (T) c);
+  }
+
+  @Override
+  public <T extends Singleton> Optional<T> getSingleton(Class<T> clazz) {
+    return Optional.ofNullable(singletonMappings.get(clazz))
+        .filter(clazz::isInstance)
+        .map(clazz::cast);
   }
 
   @Override
@@ -61,22 +81,77 @@ public class ComponentRegisterImpl implements ComponentRegister {
     return new ContextImpl(this, name);
   }
   
+  private Context createContext(Class<Component> c) {
+    String name;
+    try {
+      name = (String) c.getDeclaredField(Component.NAME).get(null);
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegister").warning("No component name declared for " + c.getName());;
+      name = c.getCanonicalName();
+    }
+    return createContext(name);
+  }
+  
   public static ComponentRegisterBuilder builder() {
     return new ComponentRegisterBuilderImpl();
+  }
+  
+  static Class<Component> pickComponentOnPriority(Class<Component> component1, Class<Component> component2) {
+    try {
+      return (component1.getField(Component.PRIORITY).getInt(null) > component2.getField(Component.PRIORITY).getInt(null)) ? component1 : component2;
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegistry").warning("No Priority set or other issue for "
+          + component1.getName() + " and " + component2.getName());
+      
+      return component1;
+    }
+  }
+  
+  static Singleton pickComponentOnPriority(Singleton component1, Singleton component2) {
+    try {
+      return (component1.getClass().getField(Component.PRIORITY).getInt(null) > component2.getClass().getField(Component.PRIORITY).getInt(null)) ? component1 : component2;
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+        | SecurityException e) {
+      Logger.getLogger("ComponentRegistry").warning("No Priority set or other issue for "
+          + component1.getComponentName() + " and " + component2.getComponentName());
+      
+      return component1;
+    }
   }
   
   public static class ComponentRegisterBuilderImpl implements ComponentRegisterBuilder {
 
     ComponentLoader loader;
     ComponentFactory factory;
+    ComponentRegisterImpl register;
+    Map<Class<Singleton>, List<Class<?>>> singletonInterfaces;
+    Map<String, Singleton> singletonMap = new ConcurrentHashMap<>();
+    Map<Class<?>, Singleton> singletonMapping = new ConcurrentHashMap<>();
 
     @Override
     public ComponentRegister build() {
-      ComponentRegisterImpl register = new ComponentRegisterImpl(factory, loader.getSingletons());
+      register = new ComponentRegisterImpl(factory);
+      
+      singletonInterfaces = loader.getSingletonClassMap();
+      Map<String, Class<Singleton>> singletonClasses = loader.getSingletons();
+      
+      singletonClasses.forEach(this::handleSingleton);
+      
+      register.singletons = Map.copyOf(singletonMap);
+      register.singletonMappings = Map.copyOf(singletonMapping);
+      register.componentMappings = Map.copyOf(loader.getComponentClassMap());
       register.components = Map.copyOf(loader.getComponents());
       return register;
     }
-
+    
+    private void handleSingleton(String name, Class<Singleton> singleton) {
+      Singleton instance = register.createSingleton(singleton, name);
+      singletonMap.put(name, instance);
+      singletonInterfaces.get(singleton).forEach(c -> singletonMapping.merge(c, instance, ComponentRegisterImpl::pickComponentOnPriority));
+    }
+    
     @Override
     public ComponentRegisterBuilder fromLoader(ComponentLoader loader) {
       this.loader = loader;
@@ -89,18 +164,6 @@ public class ComponentRegisterImpl implements ComponentRegister {
       return this;
     }
     
-  }
-
-  @Override
-  public <T extends Component> Optional<T> newComponent(Class<T> clazz) {
-    // TODO Auto-generated method stub
-    return Optional.empty();
-  }
-
-  @Override
-  public <T extends Singleton> Optional<T> getSingleton(Class<T> clazz) {
-    // TODO Auto-generated method stub
-    return Optional.empty();
   }
 
 }

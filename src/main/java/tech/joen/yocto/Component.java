@@ -11,22 +11,31 @@ import tech.joen.yocto.core.impl.ApplicationException;
  * A component can in runtime be initiated as a singleton or as a factory.
  */
 public interface Component {
-  int PRIORITY_DEFAULT = 0;
+  /**
+   * Default priority setting
+   */
+  int COMPONENTPRIORITY = 0;
+  
+  /**
+   * The name of the static field that can be set to indicate name of the component.
+   * The field must be of type String.
+   * If it is not set, a name will be generated.
+   */
+  String NAME = "COMPONENTNAME";
+  
+  /**
+   * The name of the static field that can be set to signify priority.
+   * This should be of type int, and higher value means higher priority.
+   * Only the highest priority implementation of a specific interface will be available
+   * from the component registry using the interface.
+   */
+  String PRIORITY = "COMPONENTPRIORITY";
 
   /**
    * Globally unique name of this component
    * @return
    */
   String getComponentName();
-  
-  /**
-   * Get the priority of this component implementation.
-   * If multiple components implement the same interface,
-   * the highest priority will win if a new component is instantiated based on interface.
-   * 
-   * @return the priority, with higher meaning higher priority
-   */
-  int getPriority();
   
   /**
    * Initialize this component - done before calling create(), right after calling default constructor.
